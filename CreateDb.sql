@@ -36,8 +36,8 @@ CREATE TABLE Keywords (
 
 
 
-INSERT INTO users (logonname, firstname, lastname, isadmin, passwordhash) VALUES ('bcarleski', 'Benjamin', 'Carleski', '$2a$10$09y2zaogQtXAzuaEkK96wuUohfz.OqLHVzgp8Ny0PIdK.DFZvro/G');
-INSERT INTO users (logonname, firstname, lastname, isadmin, passwordhash) VALUES ('rlyon', 'Rob', 'Lyon', '$2a$10$TayHDU7LmSWHDwglxyXnz.p8McFpCo2S.6aDL4qKWOKC1AWWRP7FK');
+INSERT INTO users (logonname, firstname, lastname, isadmin, passwordhash) VALUES ('bcarleski', 'Benjamin', 'Carleski', TRUE, '$2a$10$09y2zaogQtXAzuaEkK96wuUohfz.OqLHVzgp8Ny0PIdK.DFZvro/G');
+INSERT INTO users (logonname, firstname, lastname, isadmin, passwordhash) VALUES ('rlyon', 'Rob', 'Lyon', TRUE, '$2a$10$TayHDU7LmSWHDwglxyXnz.p8McFpCo2S.6aDL4qKWOKC1AWWRP7FK');
 
 
 
