@@ -1,0 +1,47 @@
+<div ng-controller="BookDetailController">
+    <h1>Book Details</h1>
+    <h2>{{currentBook.title}}</h2>
+    <table>
+        <tr>
+            <th>Publisher</th>
+            <td><a class="clickable-link" href='/library/publisherDetail/{{currentBook.publisherid}}'>{{currentBook.publisher}}</a></td>
+        </tr>
+        <tr>
+            <th>Author</th>
+            <td><a class="clickable-link" href='/library/authorDetail/{{currentBook.authorid}}'>{{currentBook.author}}</a></td>
+        </tr>
+        <tr>
+            <th>ISBN</th>
+            <td>{{currentBook.isbn}}</td>
+        </tr>
+        <tr>
+            <th>Summary</th>
+            <td>{{currentBook.summary}}</td>
+        </tr>
+        <tr>
+            <td colspan='2'>&nbsp;</td>
+        </tr>
+        <tr>
+            <th colspan='2'>Keywords:</th>
+        </tr>
+        <tr>
+            <td colspan='2'>
+                <div id='keywordsContainer' ng-show="keywordList">
+                    <div class='keyword-container' ng-repeat="keyword in keywordList" id='keyword_{{keyword.keywordid}}'>
+                        <div class='keyword-div'>
+                            <a class='keyword clickable-link' href='/library/searchResults/keyword?exact=true&q={{keyword.keyword}}'>{{keyword.keyword}}</a>
+                            <a class='remove-keyword clickable-link' ng-click='removeKeyword(keyword.keywordid)'>X</a>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr id='addKeywordRow'>
+            <th>New Keyword</th>
+            <td>
+                <input type='text' id='newKeyword' ng-model="newKeyword" />
+                <button ng-click='addKeyword()'>Add</button>
+            </td>
+        </tr>
+    </table>
+</div>

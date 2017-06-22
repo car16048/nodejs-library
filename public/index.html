@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html ng-app="libraryApp" ng-controller="LibraryController">
+<head>
+    <base href="/">
+    <title>Users</title>
+    <link rel="StyleSheet" href="//code.jquery.com/ui/1.12.1/themes/start/jquery-ui.css" type="text/css" />
+    <link rel="StyleSheet" href="/stylesheets/site.css" type="text/css" />
+    <script src="//code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="//code.angularjs.org/snapshot/angular.min.js"></script>
+    <script src="//code.angularjs.org/snapshot/angular-route.min.js"></script>
+    <script src="/scripts/services.js"></script>
+    <script src="/scripts/index.js"></script>
+    <script src="/bookSearchResults/bookSearchResults.js"></script>
+    <script src="/scripts/pageControllers.js"></script>
+</head>
+<body ng-cloak>
+<div id="loadingPanel" class="full-screen-overlay" ng-show="loadingVisible">
+    <div class="spinner">
+        <div class="cube1"></div>
+        <div class="cube2"></div>
+    </div>
+</div>
+<div id="loginPanel" ng-show="loginVisible" title="Login">
+    <table>
+        <tr>
+            <th><label for="loginUsername">Username:</label></th>
+            <td><input type="text" id="loginUsername" ng-model="username" required /></td>
+        </tr>
+        <tr>
+            <th><label for="loginPassword">Password:</label></th>
+            <td><input type="password" id="loginPassword" ng-model="password" required /></td>
+        </tr>
+    </table>
+    <button ng-click="loginUser()">Login</button>
+    <div id="loginError" class="error-text" ng-model="loginError"></div>
+</div>
+<div id="signupPanel" ng-show="signupVisible" title="Create a New User">
+    <table>
+        <tr>
+            <th><label for="firstName">First Name:</label></th>
+            <td><input type="text" id="firstName" ng-model="firstName" required /></td>
+        </tr>
+        <tr>
+            <th><label for="lastName">Last Name:</label></th>
+            <td><input type="text" id="lastName" ng-model="lastName" required /></td>
+        </tr>
+        <tr>
+            <th><label for="signUserName">Username:</label></th>
+            <td><input type="text" id="signUserName" ng-model="username" required /></td>
+        </tr>
+        <tr>
+            <th><label for="signPassWord">Password:</label></th>
+            <td><input type="password" id="signPassWord" ng-model="password" required /></td>
+        </tr>
+        <tr>
+            <th><label for="confPass">Confirm:</label></th>
+            <td><input type="password" id="confPass" ng-model="confirmationPassword" required /></td>
+        </tr>
+    </table>
+    <button ng-click="signupUser()">Create User</button>
+    <div id="signupError" class="error-text" ng-model="signupError"></div>
+</div>
+<div class="body-panel">
+    <div class="header">
+        <a class="homelink clickable-link" href="/"><div><span>Lincoln Libary</span></div></a>
+        <div>
+            <div class="needUser" ng-hide="user">
+                <button ng-click="showLogin()" style='margin-left: 6px; margin-right: 6px'>Log In</button>
+                <button ng-click="showSignup()" style='margin-left: 6px; margin-right: 6px'>Sign Up</button>
+            </div>
+            <div class="hasUser" ng-show="user">
+                Welcome <span class="userName">{{user.firstname}} {{user.lastname}}</span>! <button ng-click="logoutUser()">Logout</button>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="searchPanel">
+            <label for="searchType">Search by </label>
+            <select id="searchType" ng-model="searchType">
+                <option value="keyword">Keyword</option>
+                <option value="book" selected>Book Title</option>
+                <option value="author">Author</option>
+                <option value="publisher">Publisher</option>
+            </select>
+            <input type="text" id="searchText" ng-model="searchQuery" />
+            <button ng-click="searchBooks()" id="searchButton">Search</button>
+        </div>
+        <div ng-view>/div>
+    </div>
+</div>
+</body>
+</html>

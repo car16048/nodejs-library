@@ -1,0 +1,10 @@
+<div ng-controller="PublisherListController">
+    <h1>Known Publishers</h1>
+    <div class="searchResults">
+        <div ng-hide="publisherList">Loading...</div>
+        <div ng-show="publisherList && !publisherList.length">No publishers were found</div>
+        <div class="searchResult" ng-repeat="result in publisherList">
+            <a class="publisher-name clickable-link" href="/library/publisherDetail/{{result.publisherid}}">{{result.companyname}}</a>
+        </div>
+    </div>
+</div>

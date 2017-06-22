@@ -1,0 +1,10 @@
+<div ng-controller="AuthorListController">
+    <h1>Known Authors</h1>
+    <div class="searchResults">
+        <div ng-hide="authorList">Loading...</div>
+        <div ng-show="authorList && !authorList.length">No authors were found</div>
+        <div class="searchResult" ng-repeat="result in authorList">
+            <a class="author-name clickable-link" href="/library/authorDetail/{{result.authorid}}">{{result.firstname}} {{result.lastname}}</a>
+        </div>
+    </div>
+</div>

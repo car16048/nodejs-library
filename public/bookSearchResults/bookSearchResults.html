@@ -1,0 +1,14 @@
+<div class="searchResults">
+    <div ng-hide="bsrCtrl.results">Loading...</div>
+    <div ng-show="bsrCtrl.results && !bsrCtrl.results.length">No books were found</div>
+    <div class="searchResult" ng-repeat="bsrResult in bsrCtrl.results">
+        <a class="book-title clickable-link" href="/library/bookDetail/{{bsrResult.bookid}}">{{bsrResult.title}}</a>
+        <div class="bookByline">
+            Written by
+            <a class="author-name clickable-link" href="/library/authorDetail/{{bsrResult.authorid}}">{{bsrResult.author}}</a>
+            , published by
+            <a class="publisher-name clickable-link" href="/library/publisherDetail/{{bsrResult.publisherid}}">{{bsrResult.publisher}}</a>
+        </div>
+        <div class="abstract">{{bsrResult.summary}}</div>
+    </div>
+</div>
