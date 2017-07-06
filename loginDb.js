@@ -7,7 +7,7 @@ var DbTable = function(tableBase, columnList, bookJoinColumn, bookSearchColumns,
 	var colList = columnList;
 	var parents = {};
 	var connStr = process.env.DATABASE_URL;
-    var isDebug = true;
+    var isDebug = false;
 
 	var bookAllSql = 'SELECT b.bookid, b.authorid, b.publisherid, b.title, b.isbn, b.summary, ' +
         "p.companyname publisher, a.firstname || ' ' || a.lastname author " +

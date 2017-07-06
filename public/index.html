@@ -6,6 +6,7 @@
     <link rel="StyleSheet" href="//code.jquery.com/ui/1.12.1/themes/start/jquery-ui.css" type="text/css" />
     <link rel="StyleSheet" href="/stylesheets/site.css" type="text/css" />
     <script src="//code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="//code.angularjs.org/snapshot/angular.min.js"></script>
     <script src="//code.angularjs.org/snapshot/angular-route.min.js"></script>
     <script src="/scripts/services.js"></script>
@@ -32,7 +33,7 @@
         </tr>
     </table>
     <button ng-click="loginUser()">Login</button>
-    <div id="loginError" class="error-text" ng-model="loginError"></div>
+    <div id="signInError" class="error-text" ng-model="signInError"></div>
 </div>
 <div id="signupPanel" ng-show="signupVisible" title="Create a New User">
     <table>
@@ -58,18 +59,18 @@
         </tr>
     </table>
     <button ng-click="signupUser()">Create User</button>
-    <div id="signupError" class="error-text" ng-model="signupError"></div>
+    <div id="signInError" class="error-text" ng-model="signInError"></div>
 </div>
 <div class="body-panel">
     <div class="header">
         <a class="homelink clickable-link" href="/"><div><span>Lincoln Libary</span></div></a>
         <div>
-            <div class="needUser" ng-hide="user">
+            <div class="needUser" ng-hide="session.user">
                 <button ng-click="showLogin()" style='margin-left: 6px; margin-right: 6px'>Log In</button>
                 <button ng-click="showSignup()" style='margin-left: 6px; margin-right: 6px'>Sign Up</button>
             </div>
-            <div class="hasUser" ng-show="user">
-                Welcome <span class="userName">{{user.firstname}} {{user.lastname}}</span>! <button ng-click="logoutUser()">Logout</button>
+            <div class="hasUser" ng-show="session.user">
+                Welcome <span class="userName">{{session.user.firstname}} {{session.user.lastname}}</span>! <button ng-click="logoutUser()">Logout</button>
             </div>
         </div>
     </div>

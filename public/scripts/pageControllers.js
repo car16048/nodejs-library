@@ -44,6 +44,26 @@ libraryApp.controller('BookDetailController', ['$scope', '$routeParams', 'DataSe
             });
         }
     });
+
+    cur.removeKeyword = function (id) {
+        DataService.delete('keyword', id).then(function () {
+            var idx = -1;
+
+            cur.keywordList.forEach(function (val, index) { if (val.keywordid == id) idx = index; });
+
+            if (idx >= 0) cur.keywordList.splice(idx, 1);
+        });
+    };
+
+    cur.addKeyword = function () {
+        DataService.create('keyword', {bookid:cur.currentBook.bookid, keyword:cur.newKeyword}).then(function (resp) {
+            if (resp && resp.data && !resp.data.error) {
+                cur.newKeyword = '';
+                cur.keywordList.push(resp.data);
+            }
+        });
+    };
+
 }]);
 
 libraryApp.controller('BookListController', ['$scope', '$routeParams', 'DataService', function ($scope, $routeParams, DataService) {

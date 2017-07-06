@@ -2,13 +2,48 @@ var libraryApp = angular.module('libraryApp', ['ngRoute']);
 
 libraryApp.factory('BaseService', ['$q', '$http', function ($q, $http) {
     var self = {};
+    const sessionKey = 'BaseService-Session';
 
-    self.sid = null;
-    self.getHeaders = function () { return self.sid ? {headers:{Cookie:'SID=' + self.sid}} : null; };
-    self.get = function (url) { return $http.get('/api/' + url, self.getHeaders()); };
-    self.post = function (url, data) { return $http.post('/api/' + url, data, self.getHeaders()); };
-    self.put = function (url, data) { return $http.put('/api/' + url, data, self.getHeaders()); };
-    self.delete = function (url) { return $http.delete('/api/' + url, self.getHeaders()); };
+    self.session = {token:undefined, user:undefined};
+
+    if (window.sessionStorage && sessionStorage.getItem(sessionKey)) {
+        var session = JSON.parse(sessionStorage.getItem(sessionKey));
+
+        if (session && session.token && session.user) {
+            self.session.token = session.token;
+            self.session.user = session.user;
+        }
+    }
+
+    self.setAuthToken = function (data) {
+        self.session.token = data && data.user && data.token;
+        self.session.user = data && data.token && data.user;
+
+        if (window.sessionStorage) {
+            if (data && data.token && data.user) {
+                sessionStorage.setItem(sessionKey, JSON.stringify(self.session));
+            } else {
+                sessionStorage.removeItem(sessionKey);
+            }
+        }
+    };
+    self.refresh = function (resp) {
+        if (resp && typeof(resp.headers) === 'function') {
+            if (resp.headers('X-Reauth')) {
+                self.setAuthToken(null);
+            } else if (resp.headers('X-Auth-Refresh')) {
+                self.session.token = resp.headers('X-Auth-Refresh');
+                self.setAuthToken(self.session);
+            }
+        }
+
+        return resp;
+    };
+    self.getHeaders = function () { return self.session.token ? {headers:{Authorization:'Bearer ' + self.session.token}} : null; };
+    self.get = function (url) { return $http.get('/api/' + url, self.getHeaders()).then(self.refresh); };
+    self.post = function (url, data) { return $http.post('/api/' + url, data, self.getHeaders()).then(self.refresh); };
+    self.put = function (url, data) { return $http.put('/api/' + url, data, self.getHeaders()).then(self.refresh); };
+    self.delete = function (url) { return $http.delete('/api/' + url, self.getHeaders()).then(self.refresh); };
 
     return self;
 }]);

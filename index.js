@@ -2,11 +2,11 @@ var express = require('express');
 var app = express();
 var db = require('./loginDb');
 var bodyParser = require('body-parser');
-var cache = require('memory-cache');
 var uuid = require('uuid/v4');
 var bcrypt = require('bcrypt-nodejs');
-var cookieParser = require('cookie-parser');
+var jwt = require('jsonwebtoken');
 
+const jwtSecret = 'NvKLKAzkRzYHUrLbOdszw5jDLxP4hLzMoFTNBxjpIB5ZCOp8jFo5mROzDMLkDtlYtSbg4xtCrYNTYzmxnlIDOuAl1eqJ2G1XhvwiTZ4ALnGJsfxya3By2IIhgfkzogYSaOaI9RYJfWmy5UkKpOZ9UITyDD202W5Un1Q0TOE3zr263m9QcOTsXvLaelHciUCh3Op28adKGOkD89tO9WFHTpEyRWefT5DifkEwFcuwIowaN9SkcPGKE6fEOksMiwR0';
 const cacheTimeout = 15 * 60 * 1000;
 const invalid = 'Invalid username or password';
 const needsUser = 'Authentication Required';
@@ -14,7 +14,6 @@ const noAccess = 'Access Denied';
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(cookieParser());
 
 app.set('port', (process.env.PORT || 5000));
 
@@ -32,13 +31,10 @@ app.get('/library/*', function (req, res) {
 });
 
 app.all('/api/*', function(req, res, next) {
-	var sid = req.cookies && req.cookies.SID;
-	req.user = sid ? cache.get('SID-' + sid) : null;
-	if (req.user) cache.put('SID-' + sid, req.user, cacheTimeout);
     res.header('Cache-Control','no-cache, no-store, must-revalidate');
     res.header('Expires','0');
     res.header('Pragma','no-cache');
-	next();
+    getSession(req, res, next);
 });
 
 app.get('/api/user', function (req, res) {
@@ -85,8 +81,7 @@ app.post('/api/session', function (req, res) {
 });
 
 app.delete('/api/session', function (req, res) {
-    var sid = req.cookie.SID;
-    cache.del('SID-' + sid);
+    console.log('DELETE /api/session - Nothing to delete with JWT');
 });
 
 app.post('/api/search/:type(book|keyword|author|publisher)', function (req, res) {
@@ -147,10 +142,42 @@ app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
 
-function addSession(res, user) {
-	var id = uuid();
-	cache.put('SID-' + id, user, cacheTimeout);
-	res.json({sid: id, user: user});
+function getSession(req, res, next) {
+    var authHeader = req.headers['authorization'];
+    if (authHeader && /^Bearer /.test(authHeader)) {
+        jwt.verify(authHeader.substring(7), jwtSecret, {}, function (err, user) {
+            if (user && !err) {
+                req.user = user;
+                addSession(res, user, next);
+            } else {
+                console.log('Invalid authentication attempt - ' + err + '\n    ' + authHeader.substring(7));
+                res.header('X-Reauth', 'true');
+                next();
+            }
+        });
+    } else {
+        next();
+    }
+}
+function addSession(res, user, callback) {
+    delete user.exp;
+    delete user.iat;
+    jwt.sign(user, jwtSecret, {expiresIn:'15m'}, function (err, token) {
+        if (err) {
+            console.log("Could not sign user data - " + err);
+            return;
+        }
+
+        if (typeof(callback) === 'function') {
+            res.header('X-Auth-Refresh', token);
+            callback();
+        } else {
+            var usr = {};
+            Object.keys(user).forEach(function(key) { if (key != 'passwordhash') { usr[key] = user[key]; } });
+            console.log('Signed in user ' + JSON.stringify(usr) + '\n    ' + token);
+            res.json({token:token, user:usr});
+        }
+    });
 }
 
 function handleSearchResult(res, err, result) {

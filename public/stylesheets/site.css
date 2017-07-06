@@ -117,8 +117,9 @@ div.needUser {
 }
 
 div.hasUser {
-	text-align: right;
-	padding-top: 20px;
+	position: absolute;
+	right: 20px;
+	top: 40px;
 }
 
 div.content {
