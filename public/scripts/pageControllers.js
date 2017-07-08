@@ -56,22 +56,22 @@ libraryApp.controller('BookDetailController', ['$scope', '$routeParams', 'DataSe
     cur.publisherList = null;
 
     cur.removeKeyword = function (id) {
-        DataService.delete('keyword', id).then(function () {
+        DataService.delete('keyword', id).then(function (resp) {
+            if (resp.data.error) return cur.updateFailed();
             var idx = -1;
 
             cur.keywordList.forEach(function (val, index) { if (val.keywordid == id) idx = index; });
 
             if (idx >= 0) cur.keywordList.splice(idx, 1);
-        });
+        }, cur.updateFailed);
     };
 
     cur.addKeyword = function () {
         DataService.create('keyword', {bookid:cur.currentBook.bookid, keyword:cur.newKeyword}).then(function (resp) {
-            if (resp && resp.data && !resp.data.error) {
-                cur.newKeyword = '';
-                cur.keywordList.push(resp.data);
-            }
-        });
+            if (resp.data.error) return cur.updateFailed();
+            cur.newKeyword = '';
+            cur.keywordList.push(resp.data);
+        }, cur.updateFailed);
     };
 
     cur.getBook = function (id, refreshOtherData) {

@@ -110,7 +110,7 @@ app.get('/api/:type(book|keyword|author|publisher)', function (req, res) {
 
 app.post('/api/:type(book|keyword|author|publisher)', function (req, res) {
     if (!req.user) { console.log('POST ' + req.url + ' - ERROR: ' + needsUser); res.json({error: needsUser}); return; }
-    if (req.param.type != 'keyword' && !req.user.isadmin) { console.log('POST ' + req.url + ' - ERROR: ' + noAccess); res.json({error: noAccess}); return; }
+    if (req.params.type != 'keyword' && !req.user.isadmin) { console.log('POST ' + req.url + ' - ERROR: ' + noAccess); res.json({error: noAccess}); return; }
 
     db.all[req.params.type].create(req.body, function(err, result) {
         if (err) { console.log('POST ' + req.url + ' - ERROR: ' + err); res.json({error: err}); return; }
@@ -130,7 +130,7 @@ app.put('/api/:type(book|keyword|author|publisher)/:id([0-9]+)', function (req, 
 
 app.delete('/api/:type(book|keyword|author|publisher)/:id([0-9]+)', function (req, res) {
     if (!req.user) { console.log('DELETE ' + req.url + ' - ERROR: ' + needsUser); res.json({error: needsUser}); return; }
-    if (req.param.type != 'keyword' && !req.user.isadmin) { console.log('DELETE ' + req.url + ' - ERROR: ' + noAccess); res.json({error: noAccess}); return; }
+    if (req.params.type != 'keyword' && !req.user.isadmin) { console.log('DELETE ' + req.url + ' - ERROR: ' + noAccess); res.json({error: noAccess}); return; }
 
     db.all[req.params.type].delete(req.params.id, function(err, result) {
         if (err) { console.log('DELETE ' + req.url + ' - ERROR: ' + err); res.json({error: err}); return; }
