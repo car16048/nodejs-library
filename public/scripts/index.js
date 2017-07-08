@@ -24,10 +24,11 @@ function LibraryController($scope, $location, BaseService, UserService, SessionS
 
     var signInResponse = function (resp) {
         if (!resp || !resp.data || (!resp.data.error && (!resp.data.token || !resp.data.user))) {
-            loginError = 'An unknown error has occurred';
+            cur.signInError = 'An unknown error has occurred';
         } else if (resp.data.error) {
-            loginError = resp.data.error;
+            cur.signInError = resp.data.error;
         } else {
+            cur.signInError = null;
             BaseService.setAuthToken(resp.data);
             cur.loginVisible = false;
             cur.signupVisible = false;
@@ -71,6 +72,6 @@ function LibraryController($scope, $location, BaseService, UserService, SessionS
 }
 
 $(function () {
-    $('#loginPanel').dialog({modal: true, autoOpen: false});
+    $('#loginPanel').dialog({width: 350, modal: true, autoOpen: false});
     $('#signupPanel').dialog({width: 350, modal: true, autoOpen: false});
 });

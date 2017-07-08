@@ -33,7 +33,7 @@
         </tr>
     </table>
     <button ng-click="loginUser()">Login</button>
-    <div id="signInError" class="error-text" ng-model="signInError"></div>
+    <div class="error-text" ng-show="signInError">{{signInError}}</div>
 </div>
 <div id="signupPanel" ng-show="signupVisible" title="Create a New User">
     <table>
@@ -59,7 +59,7 @@
         </tr>
     </table>
     <button ng-click="signupUser()">Create User</button>
-    <div id="signInError" class="error-text" ng-model="signInError"></div>
+    <div class="error-text" ng-show="signInError">{{signInError}}</div>
 </div>
 <div class="body-panel">
     <div class="header">

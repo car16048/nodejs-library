@@ -67,7 +67,7 @@
                     <div class='keyword-container' ng-repeat="keyword in keywordList" id='keyword_{{keyword.keywordid}}'>
                         <div class='keyword-div'>
                             <a class='keyword clickable-link' href='/library/searchResults/keyword?exact=true&q={{keyword.keyword}}'>{{keyword.keyword}}</a>
-                            <a class='remove-keyword clickable-link' ng-click='removeKeyword(keyword.keywordid)'>X</a>
+                            <a class='remove-keyword clickable-link' ng-click='removeKeyword(keyword.keywordid)' ng-show="session.user">X</a>
                         </div>
                     </div>
                 </div>
