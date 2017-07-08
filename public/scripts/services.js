@@ -116,8 +116,8 @@ libraryApp.factory('DataService', ['BaseService',
             return BaseService.post(dataType, dataObject);
         };
 
-        self.update = function (dataType, dataObject) {
-            return BaseService.put(dataType, dataObject);
+        self.update = function (dataType, id, dataObject) {
+            return BaseService.put(dataType + '/' + id, dataObject);
         };
 
         self.delete = function (dataType, id) {

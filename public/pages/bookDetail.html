@@ -2,21 +2,58 @@
     <h1>Book Details</h1>
     <h2>{{currentBook.title}}</h2>
     <table>
+        <tr ng-show="session.user.isadmin">
+            <th>Title</th>
+            <td><input type="text" ng-model="currentBook.title" style="width: 98%" /></td>
+        </tr>
         <tr>
             <th>Publisher</th>
-            <td><a class="clickable-link" href='/library/publisherDetail/{{currentBook.publisherid}}'>{{currentBook.publisher}}</a></td>
+            <td>
+                <span ng-show="session.user.isadmin">
+                    <select style="width: 300px" ng-options="publisher.publisherid as publisher.companyname for publisher in publisherList" ng-model="currentBook.publisherid"></select>
+                    <a class="clickable-link" href='/library/publisherDetail/{{currentBook.publisherid}}'>View Publisher Details</a>
+                </span>
+                <span ng-hide="session.user.isadmin">
+                    <a class="clickable-link" href='/library/publisherDetail/{{currentBook.publisherid}}'>{{currentBook.publisher}}</a>
+                </span>
+            </td>
         </tr>
         <tr>
             <th>Author</th>
-            <td><a class="clickable-link" href='/library/authorDetail/{{currentBook.authorid}}'>{{currentBook.author}}</a></td>
+            <td>
+                <span ng-show="session.user.isadmin">
+                    <select style="width: 300px" ng-options="author.authorid as author.author for author in authorList" ng-model="currentBook.authorid"></select>
+                    <a class="clickable-link" href='/library/authorDetail/{{currentBook.authorid}}'>View Author Details</a>
+                </span>
+                <span ng-hide="session.user.isadmin">
+                    <a class="clickable-link" href='/library/authorDetail/{{currentBook.authorid}}'>{{currentBook.author}}</a>
+                </span>
+            </td>
         </tr>
         <tr>
             <th>ISBN</th>
-            <td>{{currentBook.isbn}}</td>
+            <td>
+                <span ng-show="session.user.isadmin">
+                    <input type="text" ng-model="currentBook.isbn" />
+                </span>
+                <span ng-hide="session.user.isadmin">
+                    {{currentBook.isbn}}
+                </span>
+            </td>
         </tr>
         <tr>
             <th>Summary</th>
-            <td>{{currentBook.summary}}</td>
+            <td>
+                <span ng-show="session.user.isadmin">
+                    <textarea ng-model="currentBook.summary" style="width: 98%; height: 44px" />
+                </span>
+                <span ng-hide="session.user.isadmin">
+                    {{currentBook.summary}}
+                </span>
+            </td>
+        </tr>
+        <tr ng-show="session.user.isadmin">
+            <td colspan='2'><button ng-click="updateBook()">Update Book Details</button></td>
         </tr>
         <tr>
             <td colspan='2'>&nbsp;</td>

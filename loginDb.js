@@ -106,7 +106,7 @@ var DbTable = function(tableBase, columnList, bookJoinColumn, bookSearchColumns,
 
         for (var i = 0; i < colList.length; i++) {
             if (args[colList[i]]) {
-                if (values.length > 0) createSql += ', ';
+                if (values.length > 0) updateSql += ', ';
                 values.push(args[colList[i]]);
                 updateSql += colList[i] + ' = $' + values.length;
             }

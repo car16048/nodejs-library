@@ -63,6 +63,10 @@ function LibraryController($scope, $location, BaseService, UserService, SessionS
         $location.url('/library/searchResults/' + encodeURIComponent(cur.searchType) + '?q=' + encodeURIComponent(cur.searchQuery));
     };
 
+    cur.updateFailed = function () {
+        alert('Unable to perform update.  Ensure you are logged in as a user with permissions to make changes.');
+    }
+
     initModel();
 }
 

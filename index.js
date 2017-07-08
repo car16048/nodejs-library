@@ -174,7 +174,6 @@ function addSession(res, user, callback) {
         } else {
             var usr = {};
             Object.keys(user).forEach(function(key) { if (key != 'passwordhash') { usr[key] = user[key]; } });
-            console.log('Signed in user ' + JSON.stringify(usr) + '\n    ' + token);
             res.json({token:token, user:usr});
         }
     });

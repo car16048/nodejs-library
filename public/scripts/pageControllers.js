@@ -7,15 +7,31 @@ libraryApp.controller('AuthorDetailController', ['$scope', '$routeParams', 'Data
 
     cur.currentAuthor = null;
     cur.bookList = null;
-    DataService.readOne('author', $routeParams.id).then(function (data) {
-        if (!data.data.error) {
-            cur.currentAuthor = data.data;
 
-            SearchService.parentSearch('book', 'author', cur.currentAuthor.authorid).then(function (data) {
-                if (!data.data.error) cur.bookList = data.data.rows;
-            });
-        }
-    });
+    cur.getAuthor = function (id) {
+        id = id || (cur.currentAuthor && cur.currentAuthor.authorid);
+        DataService.readOne('author', id).then(function (resp) {
+            if (!resp.data.error) {
+                cur.currentAuthor = resp.data;
+
+                SearchService.parentSearch('book', 'author', cur.currentAuthor.authorid).then(function (rsp) {
+                    if (!rsp.data.error) cur.bookList = rsp.data.rows;
+                });
+            }
+        });
+    };
+    cur.updateAuthor = function () {
+        if (!cur.currentAuthor) return;
+
+        DataService.update('author', cur.currentAuthor.authorid, cur.currentAuthor).then(function(resp) {
+            if (resp.data.error) return cur.updateFailed();
+
+            alert('Successfully updated the author information');
+            cur.getAuthor(cur.currentAuthor.authorid);
+        }, cur.updateFailed);
+    };
+
+    cur.getAuthor($routeParams.id);
 }]);
 
 libraryApp.controller('AuthorListController', ['$scope', '$routeParams', 'DataService', function ($scope, $routeParams, DataService) {
@@ -36,14 +52,8 @@ libraryApp.controller('BookDetailController', ['$scope', '$routeParams', 'DataSe
 
     cur.currentBook = null;
     cur.keywordList = null;
-    DataService.readOne('book', $routeParams.id).then(function (data) {
-        if (!data.data.error) {
-            cur.currentBook = data.data;
-            SearchService.parentSearch('keyword', 'book', cur.currentBook.bookid).then(function (data) {
-                if (!data.data.error) cur.keywordList = data.data.rows;
-            });
-        }
-    });
+    cur.authorList = null;
+    cur.publisherList = null;
 
     cur.removeKeyword = function (id) {
         DataService.delete('keyword', id).then(function () {
@@ -64,6 +74,46 @@ libraryApp.controller('BookDetailController', ['$scope', '$routeParams', 'DataSe
         });
     };
 
+    cur.getBook = function (id, refreshOtherData) {
+        id = id || (cur.currentBook && cur.currentBook.bookid);
+        DataService.readOne('book', id).then(function (resp) {
+            if (!resp.data.error) {
+                cur.currentBook = resp.data;
+
+                if (refreshOtherData) {
+                    SearchService.parentSearch('keyword', 'book', cur.currentBook.bookid).then(function (rsp) {
+                        if (!rsp.data.error) cur.keywordList = rsp.data.rows;
+                    });
+                    DataService.readAll('author').then(function (rsp) {
+                        if (!rsp.data.error) {
+                            for (var i = 0; i < rsp.data.length; i++) {
+                                rsp.data[i].author = rsp.data[i].firstname + ' ' + rsp.data[i].lastname;
+                            }
+                            cur.authorList = rsp.data;
+                        }
+                    });
+                    DataService.readAll('publisher').then(function (rsp) {
+                        if (!rsp.data.error) {
+                            cur.publisherList = rsp.data;
+                        }
+                    });
+                }
+            }
+        });
+    };
+
+    cur.updateBook = function () {
+        if (!cur.currentBook) return;
+
+        DataService.update('book', cur.currentBook.bookid, cur.currentBook).then(function(resp) {
+            if (resp.data.error) return cur.updateFailed();
+
+            alert('Successfully updated the book information');
+            cur.getBook();
+        }, cur.updateFailed);
+    };
+
+    cur.getBook($routeParams.id, true);
 }]);
 
 libraryApp.controller('BookListController', ['$scope', '$routeParams', 'DataService', function ($scope, $routeParams, DataService) {
@@ -84,15 +134,32 @@ libraryApp.controller('PublisherDetailController', ['$scope', '$routeParams', 'D
 
     cur.currentPublisher = null;
     cur.bookList = null;
-    DataService.readOne('publisher', $routeParams.id).then(function (data) {
-        if (!data.data.error) {
-            cur.currentPublisher = data.data;
 
-            SearchService.parentSearch('book', 'publisher', cur.currentPublisher.publisherid).then(function (data) {
-                if (!data.data.error) cur.bookList = data.data.rows;
-            });
-        }
-    });
+    cur.getPublisher = function (id) {
+        id = id || (cur.currentPublisher && cur.currentPublisher.publisherid);
+        DataService.readOne('publisher', id).then(function (resp) {
+            if (!resp.data.error) {
+                cur.currentPublisher = resp.data;
+
+                SearchService.parentSearch('book', 'publisher', cur.currentPublisher.publisherid).then(function (rsp) {
+                    if (!rsp.data.error) cur.bookList = rsp.data.rows;
+                });
+            }
+        });
+    }
+
+    cur.updatePublisher = function () {
+        if (!cur.currentPublisher) return;
+
+        DataService.update('publisher', cur.currentPublisher.publisherid, cur.currentPublisher).then(function(resp) {
+            if (resp.data.error) return cur.updateFailed();
+
+            alert('Successfully updated the publisher information');
+            cur.getPublisher();
+        }, cur.updateFailed);
+    };
+
+    cur.getPublisher($routeParams.id);
 }]);
 
 libraryApp.controller('PublisherListController', ['$scope', '$routeParams', 'DataService', function ($scope, $routeParams, DataService) {
