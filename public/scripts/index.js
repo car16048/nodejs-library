@@ -72,6 +72,6 @@ function LibraryController($scope, $location, BaseService, UserService, SessionS
 }
 
 $(function () {
-    $('#loginPanel').dialog({width: 350, modal: true, autoOpen: false});
-    $('#signupPanel').dialog({width: 350, modal: true, autoOpen: false});
+    $('#loginPanel').dialog({width: 360, modal: true, autoOpen: false});
+    $('#signupPanel').dialog({width: 360, modal: true, autoOpen: false});
 });
